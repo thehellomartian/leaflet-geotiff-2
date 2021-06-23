@@ -11,6 +11,7 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
     displayMin: 0,
     displayMax: 1,
     noDataValue: -9999,
+    useWebGL: false
   },
 
   initialize: function(options) {
@@ -78,6 +79,21 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
 
   render: function(raster, canvas, ctx, args) {
     var plottyCanvas = document.createElement("canvas");
+    
+    let matrixTransform = [
+        1,0,0,
+        0,1,0,
+        0,0,1
+    ];
+
+    if(this.options.useWebGL) {
+        matrixTransform = [
+            1,0,0,
+            0,-1,0,
+            0,raster.height,1
+        ];
+    }
+
     var plot = new plotty.plot({
       data: raster.data[0], // fix for use with rgb conversion (appending alpha channel)
       width: raster.width,
@@ -87,16 +103,23 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       clampLow: this.options.clampLow,
       clampHigh: this.options.clampHigh,
       canvas: plottyCanvas,
+      matrix: matrixTransform,
       useWebGL: false
     });
     plot.setNoDataValue(this.options.noDataValue);
     plot.render();
 
     this.colorScaleData = plot.colorScaleCanvas.toDataURL();
+    var rasterImageData;
 
-    var rasterImageData = plottyCanvas
-      .getContext("2d")
-      .getImageData(0, 0, plottyCanvas.width, plottyCanvas.height);
+    if(this.options.useWebGL) {
+      let imageDataArray = new Uint8ClampedArray(raster.width*raster.height*4);
+      let gl = plottyCanvas.getContext("webgl");
+      gl.readPixels(0, 0, raster.width, raster.height, gl.RGBA, gl.UNSIGNED_BYTE, imageDataArray);
+      rasterImageData = new ImageData(imageDataArray, raster.width, raster.height);
+    } else {
+      rasterImageData = plottyCanvas.getContext("2d").getImageData(0, 0, plottyCanvas.width, plottyCanvas.height);
+    } 
     var imageData = this.parent.transform(rasterImageData, args);
     ctx.putImageData(imageData, args.xStart, args.yStart);
   }
