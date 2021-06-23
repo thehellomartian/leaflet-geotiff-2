@@ -104,7 +104,7 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       clampHigh: this.options.clampHigh,
       canvas: plottyCanvas,
       matrix: matrixTransform,
-      useWebGL: false
+      useWebGL: this.options.useWebGL
     });
     plot.setNoDataValue(this.options.noDataValue);
     plot.render();

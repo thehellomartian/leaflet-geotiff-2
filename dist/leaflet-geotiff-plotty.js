@@ -14,7 +14,8 @@
       clampHigh: true,
       displayMin: 0,
       displayMax: 1,
-      noDataValue: -9999
+      noDataValue: -9999,
+      useWebGL: false
     },
     initialize: function initialize(options) {
       if (typeof plotty === "undefined") {
@@ -78,6 +79,12 @@
     },
     render: function render(raster, canvas, ctx, args) {
       var plottyCanvas = document.createElement("canvas");
+      var matrixTransform = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+
+      if (this.options.useWebGL) {
+        matrixTransform = [1, 0, 0, 0, -1, 0, 0, raster.height, 1];
+      }
+
       var plot = new plotty.plot({
         data: raster.data[0],
         // fix for use with rgb conversion (appending alpha channel)
@@ -88,12 +95,23 @@
         clampLow: this.options.clampLow,
         clampHigh: this.options.clampHigh,
         canvas: plottyCanvas,
-        useWebGL: false
+        matrix: matrixTransform,
+        useWebGL: this.options.useWebGL
       });
       plot.setNoDataValue(this.options.noDataValue);
       plot.render();
       this.colorScaleData = plot.colorScaleCanvas.toDataURL();
-      var rasterImageData = plottyCanvas.getContext("2d").getImageData(0, 0, plottyCanvas.width, plottyCanvas.height);
+      var rasterImageData;
+
+      if (this.options.useWebGL) {
+        var imageDataArray = new Uint8ClampedArray(raster.width * raster.height * 4);
+        var gl = plottyCanvas.getContext("webgl");
+        gl.readPixels(0, 0, raster.width, raster.height, gl.RGBA, gl.UNSIGNED_BYTE, imageDataArray);
+        rasterImageData = new ImageData(imageDataArray, raster.width, raster.height);
+      } else {
+        rasterImageData = plottyCanvas.getContext("2d").getImageData(0, 0, plottyCanvas.width, plottyCanvas.height);
+      }
+
       var imageData = this.parent.transform(rasterImageData, args);
       ctx.putImageData(imageData, args.xStart, args.yStart);
     }
