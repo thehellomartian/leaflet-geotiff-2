@@ -179,8 +179,7 @@
         const image = await this.tiff.getImage(this.options.image).catch(e => {
           console.error("this.tiff.getImage threw error", e);
         });
-        const meta = await image.getFileDirectory();
-        console.log("meta", meta);
+        const meta = await image.getFileDirectory(); //console.log("meta", meta);
 
         try {
           const bounds = image.getBoundingBox();
@@ -227,8 +226,7 @@
         return v;
       });
       this.raster.width = image.getWidth();
-      this.raster.height = image.getHeight();
-      console.log("image", image, "data", data, "raster", this.raster.data);
+      this.raster.height = image.getHeight(); //console.log("image", image, "data", data, "raster", this.raster.data);
 
       this._reset();
 

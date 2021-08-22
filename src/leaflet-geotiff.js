@@ -177,7 +177,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         console.error("this.tiff.getImage threw error", e);
       });
       const meta = await image.getFileDirectory();
-      console.log("meta", meta);
+      //console.log("meta", meta);
 
       try {
         const bounds = image.getBoundingBox();
@@ -239,7 +239,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     });
     this.raster.width = image.getWidth();
     this.raster.height = image.getHeight();
-    console.log("image", image, "data", data, "raster", this.raster.data);
+    //console.log("image", image, "data", data, "raster", this.raster.data);
     this._reset();
     return true;
   },
