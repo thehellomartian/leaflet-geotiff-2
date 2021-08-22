@@ -349,7 +349,14 @@
 
         var size = this._map.latLngToLayerPoint(this._map.getBounds().getSouthEast())._subtract(topLeft);
 
-        args.rasterPixelBounds = L.bounds(this._map.latLngToContainerPoint(this._rasterBounds.getNorthWest()), this._map.latLngToContainerPoint(this._rasterBounds.getSouthEast()));
+        args.rasterPixelBounds = L.bounds(this._map.latLngToContainerPoint(this._rasterBounds.getNorthWest()), this._map.latLngToContainerPoint(this._rasterBounds.getSouthEast())); // sometimes rasterPixelBounds will have fractional values
+        // that causes transform() to draw a mostly empty image. Convert
+        // fractional values to integers to fix this.
+
+        args.rasterPixelBounds.max.x = parseInt(args.rasterPixelBounds.max.x);
+        args.rasterPixelBounds.min.x = parseInt(args.rasterPixelBounds.min.x);
+        args.rasterPixelBounds.max.y = parseInt(args.rasterPixelBounds.max.y);
+        args.rasterPixelBounds.min.y = parseInt(args.rasterPixelBounds.min.y);
         args.xStart = args.rasterPixelBounds.min.x > 0 ? args.rasterPixelBounds.min.x : 0;
         args.xFinish = args.rasterPixelBounds.max.x < size.x ? args.rasterPixelBounds.max.x : size.x;
         args.yStart = args.rasterPixelBounds.min.y > 0 ? args.rasterPixelBounds.min.y : 0;
