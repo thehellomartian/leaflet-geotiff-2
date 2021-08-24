@@ -121,6 +121,10 @@
 
       map.on("moveend", this._reset, this);
 
+      if (this.options.clearBeforeMove) {
+        map.on("movestart", this._moveStart, this);
+      }
+
       if (map.options.zoomAnimation && L.Browser.any3d) {
         map.on("zoomanim", this._animateZoom, this);
       }
@@ -131,6 +135,10 @@
     onRemove(map) {
       map.getPanes()[this.options.pane].removeChild(this._image);
       map.off("moveend", this._reset, this);
+
+      if (this.options.clearBeforeMove) {
+        map.off("movestart", this._moveStart, this);
+      }
 
       if (map.options.zoomAnimation) {
         map.off("zoomanim", this._animateZoom, this);
@@ -290,6 +298,10 @@
       }
     },
 
+    _moveStart() {
+      this._image.style.display = 'none';
+    },
+
     _reset() {
       if (this.hasOwnProperty("_map") && this._map) {
         if (this._rasterBounds) {
@@ -301,6 +313,8 @@
           this._image.style.height = size.y + "px";
 
           this._drawImage();
+
+          this._image.style.display = 'block';
         }
       }
     },
