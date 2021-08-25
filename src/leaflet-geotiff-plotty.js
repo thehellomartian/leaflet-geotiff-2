@@ -99,6 +99,8 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       width: raster.width,
       height: raster.height,
       domain: [this.options.displayMin, this.options.displayMax],
+      displayRange: [this.options.displayMin, this.options.displayMax],
+      applyDisplayRange: true,
       colorScale: this.options.colorScale,
       clampLow: this.options.clampLow,
       clampHigh: this.options.clampHigh,
