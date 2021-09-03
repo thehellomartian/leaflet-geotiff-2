@@ -55,7 +55,8 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       domain: [0, 1],
       colorScale: paletteName,
       clampLow: true,
-      clampHigh: true
+      clampHigh: true,
+      useWebGL: this.options.useWebGL
     });
     dataUrl = plot.colorScaleCanvas.toDataURL();
     canvas.remove();
@@ -72,7 +73,8 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       domain: [this.options.displayMin, this.options.displayMax],
       colorScale: this.options.colorScale,
       clampLow: this.options.clampLow,
-      clampHigh: this.options.clampHigh
+      clampHigh: this.options.clampHigh,
+      useWebGL: this.options.useWebGL
     });
     this.colorScaleData = plot.colorScaleCanvas.toDataURL();
   },
