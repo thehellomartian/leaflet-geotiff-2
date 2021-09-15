@@ -5,6 +5,7 @@ import plotty from "plotty";
 
 L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
   options: {
+    applyDisplayRange: true,
     colorScale: "viridis",
     clampLow: true,
     clampHigh: true,
@@ -102,7 +103,7 @@ L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
       height: raster.height,
       domain: [this.options.displayMin, this.options.displayMax],
       displayRange: [this.options.displayMin, this.options.displayMax],
-      applyDisplayRange: true,
+      applyDisplayRange: this.options.applyDisplayRange,
       colorScale: this.options.colorScale,
       clampLow: this.options.clampLow,
       clampHigh: this.options.clampHigh,
