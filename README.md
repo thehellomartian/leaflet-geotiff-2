@@ -79,6 +79,9 @@ const options = {
 
   // Optional, override default opacity of 1 on the image added to the map
   opacity: 1,
+
+  // Optional, hide imagery while map is moving (may prevent 'flickering' in some browsers)
+  clearBeforeMove: false,
 };
 
 // create layer
@@ -105,6 +108,8 @@ const options = {
   displayMin: 0,
   // Optional. Maximum values to plot.
   displayMax: 1,
+  // Optional flag for plotty to enable/disable displayMin/Max.
+  applyDisplayRange: true,
   // Optional. If true values outside `displayMin` to `displayMax` will be rendered as if they were valid values.
   clampLow: true,
   clampHigh: true,

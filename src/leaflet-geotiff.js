@@ -121,6 +121,11 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
 
     map.on("moveend", this._reset, this);
 
+    if(this.options.clearBeforeMove) {
+      map.on("movestart", this._moveStart, this);
+    }
+
+
     if (map.options.zoomAnimation && L.Browser.any3d) {
       map.on("zoomanim", this._animateZoom, this);
     }
@@ -131,6 +136,11 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     map.getPanes()[this.options.pane].removeChild(this._image);
 
     map.off("moveend", this._reset, this);
+
+    if(this.options.clearBeforeMove) {
+      map.off("movestart", this._moveStart, this);
+    }
+
 
     if (map.options.zoomAnimation) {
       map.off("zoomanim", this._animateZoom, this);
@@ -177,7 +187,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         console.error("this.tiff.getImage threw error", e);
       });
       const meta = await image.getFileDirectory();
-      console.log("meta", meta);
+      //console.log("meta", meta);
 
       try {
         const bounds = image.getBoundingBox();
@@ -239,7 +249,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
     });
     this.raster.width = image.getWidth();
     this.raster.height = image.getHeight();
-    console.log("image", image, "data", data, "raster", this.raster.data);
+    //console.log("image", image, "data", data, "raster", this.raster.data);
     this._reset();
     return true;
   },
@@ -309,6 +319,9 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         L.DomUtil.getTranslateString(topLeft) + " scale(" + scale + ") ";
     }
   },
+  _moveStart() {
+    this._image.style.display = 'none';
+  },
   _reset() {
     if (this.hasOwnProperty("_map") && this._map) {
       if (this._rasterBounds) {
@@ -324,6 +337,7 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         this._image.style.height = size.y + "px";
 
         this._drawImage();
+        this._image.style.display = 'block';
       }
     }
   },
@@ -372,6 +386,16 @@ L.LeafletGeotiff = L.ImageOverlay.extend({
         this._map.latLngToContainerPoint(this._rasterBounds.getNorthWest()),
         this._map.latLngToContainerPoint(this._rasterBounds.getSouthEast())
       );
+
+
+      // sometimes rasterPixelBounds will have fractional values
+      // that causes transform() to draw a mostly empty image. Convert
+      // fractional values to integers to fix this.
+      args.rasterPixelBounds.max.x = parseInt(args.rasterPixelBounds.max.x);
+      args.rasterPixelBounds.min.x = parseInt(args.rasterPixelBounds.min.x);
+      args.rasterPixelBounds.max.y = parseInt(args.rasterPixelBounds.max.y);
+      args.rasterPixelBounds.min.y = parseInt(args.rasterPixelBounds.min.y);
+
       args.xStart =
         args.rasterPixelBounds.min.x > 0 ? args.rasterPixelBounds.min.x : 0;
       args.xFinish =
