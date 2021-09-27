@@ -4,6 +4,14 @@ A [LeafletJS](http://www.leafletjs.com) plugin for displaying geoTIFF raster dat
 
 ![Screenshot](/screenshots/example.png?raw=true)
 
+## Version 1 Notice
+
+As of version 1, `leaflet-geotiff-2` is now under [CSIRO](https://www.csiro.au)'s [Open Source Software Licence Agreement](LICENSE.md), which is a variation of the BSD / MIT License.
+
+There are no other plans for changes to licensing, and the project will remain open source.
+
+---
+
 ## Instructions
 
 ### 1. Load modules
@@ -204,4 +212,4 @@ make it back into the `leaflet-geotiff` npm package, and to provide a place for 
 
 ## License
 
-MIT License (MIT)
+CSIRO Open Source Software Licence Agreement (variation of the BSD / MIT License)
