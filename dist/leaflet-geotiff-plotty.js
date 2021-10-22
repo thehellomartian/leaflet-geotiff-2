@@ -4,7 +4,7 @@
   (global = global || self, factory(global.plotty));
 }(this, (function (plotty) { 'use strict';
 
-  plotty = plotty && plotty.hasOwnProperty('default') ? plotty['default'] : plotty;
+  plotty = plotty && Object.prototype.hasOwnProperty.call(plotty, 'default') ? plotty['default'] : plotty;
 
   // Depends on:
   L.LeafletGeotiff.Plotty = L.LeafletGeotiffRenderer.extend({
