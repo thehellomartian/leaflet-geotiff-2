@@ -219,8 +219,7 @@
           worker.onmessage = e => {
             this.min = e.data.min;
             this.max = e.data.max;
-            console.log("worker terminated");
-            console.log(e);
+            console.log("worker terminated", e);
             worker.terminate();
           };
 

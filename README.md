@@ -45,6 +45,9 @@ const options = {
   // One of: L.LeafletGeotiff.rgb, L.LeafletGeotiff.plotty, L.LeafletGeotiff.vectorArrows
   renderer: null,
 
+  // Use a worker thread for some initial compute (recommended for larger datasets)
+  useWorker: false,
+
   // Optional array specifying the corners of the data, e.g. [[40.712216, -74.22655], [40.773941, -74.12544]].
   // If omitted the image bounds will be read from the geoTIFF file (ModelTiepoint).
   bounds: [],
